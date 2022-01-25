@@ -1,0 +1,4 @@
+move left - A or left
+move right - D or right
+shoot - space
+pause - escape

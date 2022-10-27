@@ -120,8 +120,7 @@ while running:
                 right = True
 
             elif event.key == pygame.K_SPACE and not stopped and not player.shooting and not paused:
-                if SOUNDS:
-                    shot_sound.play()
+                shot_sound.play()
                 player.shooting = True
 
             elif event.key == pygame.K_ESCAPE and not stopped:
@@ -155,19 +154,20 @@ while running:
         else:
             score += 0.005 * 2.4
 
-        for img in back_imgs:
-            img['y'] += BACK_SPEED
-
         if right:
             player.move(direction='right')
-        if left:
+        elif left:
             player.move(direction='left')
 
         if player.shooting:
             player.shoot()
 
         for img in back_imgs:
+            img['y'] += BACK_SPEED
             win.blit(BACK_IMG, (img['x'], img['y']))
+
+        if len(enemies) == 0:
+            create_enemies(randint(2, 3))
 
         for enemy in enemies:
             if enemy.rect.y < HEIGHT:
@@ -175,19 +175,13 @@ while running:
             else:
                 enemies.remove(enemy)
 
-        if len(enemies) == 0:
-            create_enemies(randint(2, 3))
-
-        for enemy in enemies:
             win.blit(enemy.img, (enemy.rect.x, enemy.rect.y))
 
-        for enemy in enemies:
             if enemy.rect.colliderect(player.rect):
                 stopped = True
                 draw_text(win, 'You lose! Press Space to restart', COLORS['white'], HALF_WIDTH, HALF_HEIGHT)
                 update_json(score)
 
-        for enemy in enemies:
             if player.laser_rect.colliderect(enemy.rect):
                 if SOUNDS:
                     killed_sound.play()
@@ -197,12 +191,12 @@ while running:
             TEXT_X = 70
             TEXT_Y = 20
 
-        if round(score) < 100:
+        elif round(score) < 100:
             if round(score) == 10:
                 TEXT_X += 10
                 score += 1
 
-        if round(score) == 100:
+        elif round(score) == 100:
             TEXT_X += 10
             score += 1
 
